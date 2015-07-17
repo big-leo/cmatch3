@@ -2,23 +2,23 @@ CPP=g++
 CPPFLAGS= -Wall -g
 CLEAN= rm -f
 
-cmatch3: main.o zapovn.o zmina.o zsuv.o pole10x10.o
+SOURCEDIR=src
+BUILDDIR=build
+
+EXECUTABLE=target/cmatch3
+SOURCES=$(wildcard $(SOURCEDIR)/*.cpp)
+OBJECTS=$(patsubst $(SOURCEDIR)/%.cpp,$(BUILDDIR)/%.o,$(SOURCES))
+
+build: create_dirs $(EXECUTABLE)
+
+create_dirs:
+	mkdir build target
+
+$(EXECUTABLE): $(OBJECTS)
 	$(CPP) $(CPPFLAGS) -o $@ $^
 
-main.o: main.cpp
-	$(CPP) $(CPPFLAGS) -c $^
-
-zapovn.o: zapovn.cpp
-	$(CPP) $(CPPFLAGS) -c $^
-
-zmina.o: zmina.cpp
-	$(CPP) $(CPPFLAGS) -c $^
-
-zsuv.o: zsuv.cpp
-	$(CPP) $(CPPFLAGS) -c $^
-
-pole10x10.o: pole10x10.cpp
-	$(CPP) $(CPPFLAGS) -c $^
+$(OBJECTS): $(BUILDDIR)/%.o: $(SOURCEDIR)/%.cpp
+	$(CPP) $(CPPFLAGS) -c -o $@ $<
 
 clean:
-	$(CLEAN) *.o cmatch3
+	$(CLEAN) $(BUILDDIR)/*.o $(EXECUTABLE)
